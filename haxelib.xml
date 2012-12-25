@@ -1,0 +1,9 @@
+<project name="compiletime" url="https://github.com/jasononeil/compiletime" license="MIT">
+        <user name="jason"/>
+        <tag v="cross" />
+        <tag v="macro" />
+        <tag v="helpers" />
+        <depends name="tink_macros"/>
+        <description>Simple Haxe Macro Helpers that let you do or get things at compile-time. </description>
+    <version name="0.0.0.0"></version>
+</project>

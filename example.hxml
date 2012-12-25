@@ -1,0 +1,11 @@
+-main Example
+-neko example/Example.hx.n
+-cp src/
+-cp example/
+
+--next 
+
+-main Example 
+-js example/Example.hx.js
+-cp src/
+-cp example/

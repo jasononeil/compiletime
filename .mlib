@@ -1,0 +1,5 @@
+<mlib bin="bin">
+	<resources>
+		<resource type="src" path="src" dest="" />
+	</resources>
+</mlib>
