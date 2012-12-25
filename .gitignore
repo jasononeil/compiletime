@@ -1,6 +1,7 @@
 # Compiled Files
 *.js
 *.n
+bin/
 
 # Editor Files
 *.sublime-*
