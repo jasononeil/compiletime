@@ -51,6 +51,14 @@ class CompileTime
         return toExpr(content);
     }
 
+    /** Include a package at compile time.  Is a simple mapping to haxe.macro.Compiler.include(), but means you don't have to wrap your code in conditionals. */
+    @:macro public static function includePackage(path:String, ?recursive:Bool = true, ?ignore : Array<String>, ?classPaths : Array<String>)
+    {
+        #if macro 
+            haxe.macro.Compiler.include(path, recursive, ignore, classPaths);
+        #end
+    }
+
     #if macro
         static function toExpr(v:Dynamic) 
         {
