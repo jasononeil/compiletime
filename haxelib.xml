@@ -4,6 +4,5 @@
 	<tag v="macro" />
 	<tag v="helpers" />
 	<description>Simple Haxe Macro Helpers that let you do or get things at compile-time. </description>
-	<version name="1.0.0.0">First release.  Supports buildDate() buildDateString() readFile() and readXmlFile()</version>
-	<depends name="tink_macros"/>
+	<version name="1.0.0.1">Removed dependency on tink_macros</version>
 </project>
