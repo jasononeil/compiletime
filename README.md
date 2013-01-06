@@ -11,3 +11,8 @@ Usage
 	var file = CompileTime.readFile("README.md");			// Reads the contents of README.md as a String.
 	var xmlString = CompileTime.readXmlFile("haxelib.xml");	// Reads the contents of haxelib.xml as a String, but checks that it is valid XML
 	CompileTime.importPackage("server.controllers");		// Will include all classes in the server.controllers package.
+
+	CompileTime.getAllClasses("my.package");				// Returns a list of all the classes in the "my.package" package, including sub-packages
+	CompileTime.getAllClasses("my.package", false);			// Returns a list of only the classes in the "my.package" package, so not including sub-packages
+	CompileTime.getAllClasses(MySuperClass);				// Returns a list of all the classes that inherit MySuperClass, no matter what package
+	CompileTime.getAllClasses("my.package", MySuperClass);	// Returns a list of all the classes in the "my.package" package that inherit MySuperClass.
