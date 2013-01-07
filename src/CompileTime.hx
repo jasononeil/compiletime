@@ -104,25 +104,46 @@ class CompileTime
         static function getClassTypeFromExpr(e:Expr):ClassType
         {
             var ct:ClassType = null;
-            switch (e.expr)
+            var fullClassName = null;
+            var parts = new Array<String>();
+            var nextSection = e.expr;
+            while (nextSection != null)
             {
-                case EConst(c):
-                    switch (c)
-                    {
-                        case CIdent(s):
-                            if (s != "null")
-                            {
-                                switch (Context.getType(s))
+                // Break the loop unless we explicitly encounter a next section...
+                var s = nextSection;
+                nextSection = null;
+
+                switch (s)
+                {
+                    // Might be a direct class name, no packages
+                    case EConst(c):
+                        switch (c)
+                        {
+                            case CIdent(s):
+                                if (s != "null")
                                 {
-                                    case TInst(classType, parameters):
-                                        ct = classType.get();
-                                    default:
-                                        throw "Currently CompileTime.getAllClasses() can only search by package name or base class, not interface, typedef etc.";
+                                    parts.unshift(s);
                                 }
-                            }
-                        default:
-                    }
-                default:
+                            default:
+                        }
+                    // Might be a fully qualified package name
+                    // { expr => EField({ expr => EField({ expr => EConst(CIdent(sys)), pos => #pos(src/server/Server.hx:35: characters 53-56) },db), pos => #pos(src/server/Server.hx:35: characters 53-59) },Object), pos => #pos(src/server/Server.hx:35: characters 53-66) }
+                    case EField(e, field):
+                        parts.unshift(field);
+                        nextSection = e.expr;
+                    default:
+                }
+            }
+            fullClassName = parts.join(".");
+            if (fullClassName != "")
+            {
+                switch (Context.getType(fullClassName))
+                {
+                    case TInst(classType, parameters):
+                        ct = classType.get();
+                    default:
+                        throw "Currently CompileTime.getAllClasses() can only search by package name or base class, not interface, typedef etc.";
+                }
             }
             return ct;
         }

@@ -34,6 +34,9 @@ class Example
 		var baseBClasses = CompileTime.getAllClasses(BaseB);			// Get every class that inherits BaseB, no matter which package
 		assert(baseBClasses.length == 4);
 
+		var baseBClasses = CompileTime.getAllClasses(pack.BaseB);			// You can also use a fully qualified class name
+		assert(baseBClasses.length == 4);
+
 		var BaseBPackSub1Classes = CompileTime.getAllClasses("pack.sub1", BaseB);	// Get every class in package "pack.sub1" that inherits BaseB
 		assert(BaseBPackSub1Classes.length == 2);
 
