@@ -36,12 +36,12 @@ class CompileTime
 
     /** Reads a file at compile time, and inserts the contents into your code as a string. */
     @:macro public static function readFile(path:String) {
-        return toExpr(sys.io.File.getContent(path));
+        return toExpr(loadFileAsString(path));
     }
 
     /** Same as readFile, but checks that the file is valid Xml */
     @:macro public static function readXmlFile(path:String) {
-        var content = sys.io.File.getContent(path);
+        var content = loadFileAsString(path);
 
         try
         {
@@ -80,6 +80,12 @@ class CompileTime
         static function toExpr(v:Dynamic) 
         {
             return Context.makeExpr(v, Context.currentPos());
+        }
+
+        static function loadFileAsString(path:String)
+        {
+            var p = haxe.macro.Context.resolvePath(path);
+            return sys.io.File.getContent(p);
         }
 
         static function isSameClass(a:ClassType, b:ClassType):Bool
