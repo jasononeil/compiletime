@@ -18,7 +18,7 @@ using Lambda;
 class CompileTime 
 {
     /** Inserts a date object of the date and time that this was compiled */
-    @:macro public static function buildDate() {
+    macro public static function buildDate() {
         var date = Date.now();
         var year = toExpr(date.getFullYear());
         var month = toExpr(date.getMonth());
@@ -30,17 +30,17 @@ class CompileTime
     }
 
     /** Returns a string of the date and time that this was compiled */
-    @:macro public static function buildDateString() {
+    macro public static function buildDateString() {
         return toExpr(Date.now().toString());
     }
 
     /** Reads a file at compile time, and inserts the contents into your code as a string. */
-    @:macro public static function readFile(path:String) {
+    macro public static function readFile(path:String) {
         return toExpr(loadFileAsString(path));
     }
 
     /** Same as readFile, but checks that the file is valid Xml */
-    @:macro public static function readXmlFile(path:String) {
+    macro public static function readXmlFile(path:String) {
         var content = loadFileAsString(path);
 
         try
@@ -56,7 +56,7 @@ class CompileTime
     }
 
     /** Import a package at compile time.  Is a simple mapping to haxe.macro.Compiler.include(), but means you don't have to wrap your code in conditionals. */
-    @:macro public static function importPackage(path:String, ?recursive:Bool = true, ?ignore : Array<String>, ?classPaths : Array<String>)
+    macro public static function importPackage(path:String, ?recursive:Bool = true, ?ignore : Array<String>, ?classPaths : Array<String>)
     {
         haxe.macro.Compiler.include(path, recursive, ignore, classPaths);
         return toExpr(0);
@@ -64,7 +64,7 @@ class CompileTime
 
     /** Returns an Array of Classes.  By default it will return all classes, but you can also search for classes in a particular package, 
     classes that extend a particular type, and you can choose whether to look for classes recursively or not. */
-    @:macro public static function getAllClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<Dynamic>>)
+    macro public static function getAllClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<Dynamic>>)
     {
         var p = Context.currentPos();
 
