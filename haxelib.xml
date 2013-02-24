@@ -4,5 +4,5 @@
 	<tag v="macro" />
 	<tag v="helpers" />
 	<description>Simple Haxe Macro Helpers that let you do or get things at compile-time. </description>
-	<version name="1.2.1.0">Fix to allow fully qualified class name in getAllClasses()</version>
+	<version name="1.2.2.0">Updated readFile and readXmlFile to search all class paths, not just the current directory</version>
 </project>
