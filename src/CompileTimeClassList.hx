@@ -13,7 +13,7 @@ using Lambda;
 
 class CompileTimeClassList 
 {
-	static var lists:Hash<List<Class<Dynamic>>> = null;
+	static var lists:Map<String, List<Class<Dynamic>>> = null;
 	
 	public static function get(id:String)
 	{
@@ -23,14 +23,14 @@ class CompileTimeClassList
 
 	static function initialise()
 	{
-		lists = new Hash();
+		lists = new Map();
 		var m = haxe.rtti.Meta.getType(CompileTimeClassList);
 		if (m.classLists != null)
 		{
-			var allLists:Array<Array<String>> = m.classLists;
-			for (item in allLists)
+			for (item in m.classLists)
 			{
-				var listID = item[0];
+				var array:Array<String> = cast item;
+				var listID = array[0];
 				var classes = item[1].split(',').map(function (typeName) {
 					return Type.resolveClass(typeName);
 				});
