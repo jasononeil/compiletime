@@ -71,7 +71,7 @@ class CompileTime
         var baseClass:ClassType = getClassTypeFromExpr(extendsBaseClass);
         var baseClassName:String = (baseClass == null) ? "" : baseClass.pack.join('.') + '.' + baseClass.name;
         var listIDExpr = toExpr(inPackage + "," + includeChildPackages + "," + baseClassName);
-        Context.onGenerate(callback(checkForMatchingClasses, inPackage, includeChildPackages, baseClass, listIDExpr, p));
+        Context.onGenerate(checkForMatchingClasses.bind(inPackage, includeChildPackages, baseClass, listIDExpr, p));
 
         return macro CompileTimeClassList.get($listIDExpr);
     }
