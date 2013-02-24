@@ -215,7 +215,7 @@ class CompileTime
             var classListsMetaArray:Array<Expr>;
             if (ct.meta.has('classLists'))
             {
-                classListsMetaArray = ct.meta.get().filter(function (i) { return i.name == "classLists"; }).first().params;
+                classListsMetaArray = ct.meta.get().filter(function (i) { return i.name == "classLists"; })[0].params;
                 ct.meta.remove('classLists');
             }
             else 
