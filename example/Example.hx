@@ -2,6 +2,8 @@ import pack.*;
 import pack.sub1.*;
 import pack.sub2.*;
 
+using Lambda;
+
 class Example 
 {
 	static function main()
@@ -14,31 +16,31 @@ class Example
 		CompileTime.importPackage("pack");						// Imports every class in that package
 
 		var allClasses = CompileTime.getAllClasses();					// Get every class that is compiled.  You probably don't ever want this.
-		assert(allClasses.length > 10);
+		assert(allClasses.count() > 10);
 
 		var packClasses = CompileTime.getAllClasses("pack");			// Get every class in package "pack"
-		assert(packClasses.length == 10);
+		assert(packClasses.count() == 10);
 
 		var packClassesOnly = CompileTime.getAllClasses("pack", false);	// Get every class in package "pack", but ignore sub-packages
-		assert(packClassesOnly.length == 2);
+		assert(packClassesOnly.count() == 2);
 
 		var packSub1Classes = CompileTime.getAllClasses("pack.sub1");	// Get every class in package "pack.sub1"
-		assert(packSub1Classes.length == 4);
+		assert(packSub1Classes.count() == 4);
 
 		var packSub2Classes = CompileTime.getAllClasses("pack.sub2");	// Get every class in package "pack.sub2"
-		assert(packSub2Classes.length == 4);
+		assert(packSub2Classes.count() == 4);
 
 		var baseAClasses = CompileTime.getAllClasses(BaseA);			// Get every class that inherits BaseA, no matter which package
-		assert(baseAClasses.length == 4);
+		assert(baseAClasses.count() == 4);
 
 		var baseBClasses = CompileTime.getAllClasses(BaseB);			// Get every class that inherits BaseB, no matter which package
-		assert(baseBClasses.length == 4);
+		assert(baseBClasses.count() == 4);
 
 		var baseBClasses = CompileTime.getAllClasses(pack.BaseB);		// You can also use a fully qualified class name
-		assert(baseBClasses.length == 4);
+		assert(baseBClasses.count() == 4);
 
 		var BaseBPackSub1Classes = CompileTime.getAllClasses("pack.sub1", BaseB);	// Get every class in package "pack.sub1" that inherits BaseB
-		assert(BaseBPackSub1Classes.length == 2);
+		assert(BaseBPackSub1Classes.count() == 2);
 
 		for (c in BaseBPackSub1Classes)
 		{
