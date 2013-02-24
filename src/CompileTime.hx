@@ -145,7 +145,7 @@ class CompileTime
             {
                 switch (Context.getType(fullClassName))
                 {
-                    case TInst(classType, parameters):
+                    case TInst(classType, _):
                         ct = classType.get();
                     default:
                         throw "Currently CompileTime.getAllClasses() can only search by package name or base class, not interface, typedef etc.";
@@ -162,7 +162,7 @@ class CompileTime
                 switch (type)
                 {
                     // We only care for Classes 
-                    case TInst(t, param):
+                    case TInst(t, _):
                         var include = true;
 
                         // Check if it belongs to a certain package or subpackage
@@ -205,7 +205,7 @@ class CompileTime
             var ct:ClassType = null;
             switch (Context.getType("CompileTimeClassList"))
             {
-                case TInst(classType, parameters):
+                case TInst(classType, _):
                     ct = classType.get();
                 default:
             }
