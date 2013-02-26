@@ -1,8 +1,8 @@
-<project name="compiletime" url="https://github.com/jasononeil/compiletime" license="MIT">
+<project name="compiletime" url="https://github.com/jasononeil/compiletime" license="">
 	<user name="jason"/>
 	<tag v="cross" />
 	<tag v="macro" />
 	<tag v="helpers" />
 	<description>Simple Haxe Macro Helpers that let you do or get things at compile-time. </description>
-	<version name="1.2.2.0">Updated readFile and readXmlFile to search all class paths, not just the current directory</version>
+	<version name="2.0.0.0">Version bump for haxe3 compatibility.  Breaks compatibility with Haxe2 probably</version>
 </project>
