@@ -1,4 +1,4 @@
-<project name="compiletime" url="https://github.com/jasononeil/compiletime" license="">
+<project name="compiletime" url="https://github.com/jasononeil/compiletime" license="MIT">
 	<user name="jason"/>
 	<tag v="cross" />
 	<tag v="macro" />
