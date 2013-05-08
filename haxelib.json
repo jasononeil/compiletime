@@ -1,0 +1,13 @@
+{
+  "name": "compiletime",
+  "license": "MIT",
+  "tags": ["cross","macro","helpers"],
+  "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
+  "contributors": ["jason"],
+  "releasenote": "Version bump for haxe3 compatibility.  Breaks compatibility with Haxe2 probably",
+  "version": "2.0.0",
+  "url": "https://github.com/jasononeil/compiletime",
+  "dependencies": {
+
+  }
+}
