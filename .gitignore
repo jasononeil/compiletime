@@ -1,6 +1,7 @@
 # Compiled Files
 *.js
 *.n
+*.zip
 bin/
 
 # Editor Files

@@ -1,6 +1,7 @@
 {
   "name": "compiletime",
   "license": "MIT",
+  "classPath": "src/",
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
