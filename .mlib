@@ -1,7 +1,0 @@
-<mlib bin="bin">
-	<resources>
-		<resource type="src" path="src" dest="" />
-		<resource path="haxelib.json" dest="haxelib.json" />
-		<resource type="license" path="license.mtt" />
-	</resources>
-</mlib>
