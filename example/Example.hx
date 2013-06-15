@@ -4,6 +4,13 @@ import pack.sub2.*;
 
 using Lambda;
 
+typedef Person = {
+	name:String,
+	age:Int,
+	pets:Array<String>,
+	?other:Int
+}
+
 class Example 
 {
 	static function main()
@@ -14,7 +21,8 @@ class Example
 		var xmlString = CompileTime.readXmlFile("test.xml");	// Reads the contents of text.xml as a String, but checks that it is valid XML
 		var jsonString = CompileTime.readJsonFile("test.json"); // Reads the contents of text.json as a String, but checks that it is valid JSON
 		var jsonObject = CompileTime.parseJsonFile("test.json"); // Reads the contents of text.json, parses it, and places the resulting object in the code so no parsing happens at runtime
-
+		var typedJsonObject:Person = CompileTime.parseJsonFile("test.json"); // Same as above, but check the result matches our typedef
+		
 		CompileTime.importPackage("pack");						// Imports every class in that package
 
 		var allClasses = CompileTime.getAllClasses();					// Get every class that is compiled.  You probably don't ever want this.
