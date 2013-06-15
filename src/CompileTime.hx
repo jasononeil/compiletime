@@ -34,7 +34,7 @@ class CompileTime
         return toExpr(Date.now().toString());
     }
 
-    /** Reads a file at compile time, and inserts the contents into your code as a string. */
+    /** Reads a file at compile time, and inserts the contents into your code as a string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
     macro public static function readFile(path:String) {
         return toExpr(loadFileAsString(path));
     }
