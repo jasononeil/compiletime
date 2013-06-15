@@ -11,7 +11,9 @@ class Example
 		var date = CompileTime.buildDate();						// Equivalent of writing `new Date(2012,11,25,20,48,15);`
 		var dateAsString = CompileTime.buildDateString();		// A string saying "2012-12-25 20:48:15"
 		var file = CompileTime.readFile("README.md");			// Reads the contents of README.md as a String.
-		var xmlString = CompileTime.readXmlFile("test.xml");	// Reads the contents of haxelib.xml as a String, but checks that it is valid XML
+		var xmlString = CompileTime.readXmlFile("test.xml");	// Reads the contents of text.xml as a String, but checks that it is valid XML
+		var jsonString = CompileTime.readJsonFile("test.json"); // Reads the contents of text.json as a String, but checks that it is valid JSON
+		var jsonObject = CompileTime.parseJsonFile("test.json"); // Reads the contents of text.json, parses it, and places the resulting object in the code so no parsing happens at runtime
 
 		CompileTime.importPackage("pack");						// Imports every class in that package
 

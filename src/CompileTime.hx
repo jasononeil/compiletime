@@ -12,6 +12,7 @@
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
+import haxe.Json;
 using StringTools;
 using Lambda;
 
@@ -37,6 +38,24 @@ class CompileTime
     /** Reads a file at compile time, and inserts the contents into your code as a string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
     macro public static function readFile(path:String) {
         return toExpr(loadFileAsString(path));
+    }
+
+    /** Same as readFile, but checks that the file is valid Json */
+    macro public static function readJsonFile(path:String) {
+        var content = loadFileAsString(path);
+        try Json.parse(content) catch (e:Dynamic) {
+            haxe.macro.Context.error("Json failed to validate: " + Std.string(e), Context.currentPos());
+        }
+        return toExpr(content);
+    }
+
+    /** Same as readFile, but checks that the file is valid Json */
+    macro public static function parseJsonFile(path:String) {
+        var content = loadFileAsString(path);
+        var obj = try Json.parse(content) catch (e:Dynamic) {
+            haxe.macro.Context.error("Json failed to validate: " + Std.string(e), Context.currentPos());
+        }
+        return toExpr(obj);
     }
 
     /** Same as readFile, but checks that the file is valid Xml */
@@ -71,8 +90,13 @@ class CompileTime
         }
 
         static function loadFileAsString(path:String) {
-            var p = haxe.macro.Context.resolvePath(path);
-            return sys.io.File.getContent(p);
+            try {
+                var p = haxe.macro.Context.resolvePath(path);
+                return sys.io.File.getContent(p);
+            } 
+            catch(e:Dynamic) {
+                return haxe.macro.Context.error('Failed to load file $path: $e', Context.currentPos());
+            }
         }
 
         static function isSameClass(a:ClassType, b:ClassType):Bool {
