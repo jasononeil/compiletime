@@ -42,62 +42,47 @@ class CompileTime
     /** Same as readFile, but checks that the file is valid Xml */
     macro public static function readXmlFile(path:String) {
         var content = loadFileAsString(path);
-
-        try
-        {
-            Xml.parse(content);
-        } 
-        catch (e:Dynamic)
-        {
+        try Xml.parse(content) catch (e:Dynamic) {
             haxe.macro.Context.error("Xml failed to validate: " + Std.string(e), Context.currentPos());
         }
-
         return toExpr(content);
     }
 
     /** Import a package at compile time.  Is a simple mapping to haxe.macro.Compiler.include(), but means you don't have to wrap your code in conditionals. */
-    macro public static function importPackage(path:String, ?recursive:Bool = true, ?ignore : Array<String>, ?classPaths : Array<String>)
-    {
+    macro public static function importPackage(path:String, ?recursive:Bool = true, ?ignore : Array<String>, ?classPaths : Array<String>) {
         haxe.macro.Compiler.include(path, recursive, ignore, classPaths);
         return toExpr(0);
     }
 
     /** Returns an Array of Classes.  By default it will return all classes, but you can also search for classes in a particular package, 
     classes that extend a particular type, and you can choose whether to look for classes recursively or not. */
-    macro public static function getAllClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<Dynamic>>)
-    {
+    macro public static function getAllClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<Dynamic>>) {
         var p = Context.currentPos();
-
         var baseClass:ClassType = getClassTypeFromExpr(extendsBaseClass);
         var baseClassName:String = (baseClass == null) ? "" : baseClass.pack.join('.') + '.' + baseClass.name;
         var listIDExpr = toExpr(inPackage + "," + includeChildPackages + "," + baseClassName);
         Context.onGenerate(checkForMatchingClasses.bind(inPackage, includeChildPackages, baseClass, listIDExpr, p));
-
         return macro CompileTimeClassList.get($listIDExpr);
     }
 
     #if macro
-        static function toExpr(v:Dynamic) 
-        {
+        static function toExpr(v:Dynamic) {
             return Context.makeExpr(v, Context.currentPos());
         }
 
-        static function loadFileAsString(path:String)
-        {
+        static function loadFileAsString(path:String) {
             var p = haxe.macro.Context.resolvePath(path);
             return sys.io.File.getContent(p);
         }
 
-        static function isSameClass(a:ClassType, b:ClassType):Bool
-        {
+        static function isSameClass(a:ClassType, b:ClassType):Bool {
             return (
                 a.pack.join(".") == b.pack.join(".")
                 && a.name == b.name 
             );
         }
 
-        static function isSubClassOfBaseClass(subClass:ClassType, baseClass:ClassType):Bool
-        {
+        static function isSubClassOfBaseClass(subClass:ClassType, baseClass:ClassType):Bool {
             var sClass = subClass;
             while (sClass.superClass != null)
             {
@@ -107,29 +92,22 @@ class CompileTime
             return false;
         }
 
-        static function getClassTypeFromExpr(e:Expr):ClassType
-        {
+        static function getClassTypeFromExpr(e:Expr):ClassType {
             var ct:ClassType = null;
             var fullClassName = null;
             var parts = new Array<String>();
             var nextSection = e.expr;
-            while (nextSection != null)
-            {
+            while (nextSection != null) {
                 // Break the loop unless we explicitly encounter a next section...
                 var s = nextSection;
                 nextSection = null;
 
-                switch (s)
-                {
+                switch (s) {
                     // Might be a direct class name, no packages
                     case EConst(c):
-                        switch (c)
-                        {
+                        switch (c) {
                             case CIdent(s):
-                                if (s != "null")
-                                {
-                                    parts.unshift(s);
-                                }
+                                if (s != "null") parts.unshift(s);
                             default:
                         }
                     // Might be a fully qualified package name
@@ -141,10 +119,8 @@ class CompileTime
                 }
             }
             fullClassName = parts.join(".");
-            if (fullClassName != "")
-            {
-                switch (Context.getType(fullClassName))
-                {
+            if (fullClassName != "") {
+                switch (Context.getType(fullClassName)) {
                     case TInst(classType, _):
                         ct = classType.get();
                     default:
@@ -154,45 +130,35 @@ class CompileTime
             return ct;
         }
 
-        static function checkForMatchingClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?baseClass:ClassType, listIDExpr:Expr, p:Position, arr:Array<haxe.macro.Type>)
-        {
+        static function checkForMatchingClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?baseClass:ClassType, listIDExpr:Expr, p:Position, arr:Array<haxe.macro.Type>) {
             var classesFound:Array<String> = [];
-            for (type in arr)
-            {
-                switch (type)
-                {
+            for (type in arr) {
+                switch (type) {
                     // We only care for Classes 
                     case TInst(t, _):
                         var include = true;
 
                         // Check if it belongs to a certain package or subpackage
-                        if (inPackage != null)
-                        {
-                            if (includeChildPackages)
-                            {
+                        if (inPackage != null) {
+                            if (includeChildPackages) {
                                 if (t.toString().startsWith(inPackage) == false) 
                                     include = false;
                             }
-                            else 
-                            {
+                            else {
                                 var re = new EReg("^" + inPackage + "\\.([A-Z][a-zA-Z0-9]*)$", "");
                                 if (re.match(t.toString()) == false)
-                                {
                                     include = false;
-                                }
                             }
                         }
 
                         // Check if it is a subclass of a certain type
-                        if (baseClass != null)
-                        {
+                        if (baseClass != null) {
                             if (isSubClassOfBaseClass(t.get(), baseClass) == false)
-                            {
                                 include = false;
-                            }
                         }
 
-                        if (include) classesFound.push(t.toString()); 
+                        if (include) 
+                            classesFound.push(t.toString()); 
                     default:
                 }
             }
@@ -203,8 +169,7 @@ class CompileTime
 
             // Get the CompileTimeClassList class
             var ct:ClassType = null;
-            switch (Context.getType("CompileTimeClassList"))
-            {
+            switch (Context.getType("CompileTimeClassList")) {
                 case TInst(classType, _):
                     ct = classType.get();
                 default:
@@ -213,13 +178,11 @@ class CompileTime
             // If the @classLists metadata already exists, get a copy of it and remove it
             // (We'll re-add it in a minute)
             var classListsMetaArray:Array<Expr>;
-            if (ct.meta.has('classLists'))
-            {
+            if (ct.meta.has('classLists')) {
                 classListsMetaArray = ct.meta.get().filter(function (i) { return i.name == "classLists"; })[0].params;
                 ct.meta.remove('classLists');
             }
-            else 
-            {
+            else {
                 classListsMetaArray = [];
             }
             
