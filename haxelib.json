@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Added `readJsonFile` and `parseJsonFile`.  readJsonFile file loads it as a String, but validates that it is valid Json.  parseJsonFile parses it into an object, and checks that the type of the resulting object is correct with what you are requesting. ",
-  "version": "2.1.0",
+  "releasenote": "Minor bug fix release. ",
+  "version": "2.1.1",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }
