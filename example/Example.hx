@@ -21,7 +21,9 @@ class Example
 		var dateAsString = CompileTime.buildDateString();		// A string saying "2012-12-25 20:48:15"
 		var file = CompileTime.readFile("README.md");			// Reads the contents of README.md as a String.
 		var xmlString = CompileTime.readXmlFile("test.xml");	// Reads the contents of text.xml as a String, but checks that it is valid XML
+		// var xmlString = CompileTime.readXmlFile("broken.xml");
 		var jsonString = CompileTime.readJsonFile("test.json"); // Reads the contents of text.json as a String, but checks that it is valid JSON
+		// var jsonString = CompileTime.readJsonFile("broken.json");
 		var jsonObject = CompileTime.parseJsonFile("test.json"); // Reads the contents of text.json, parses it, and places the resulting object in the code so no parsing happens at runtime
 		var typedJsonObject:Person = CompileTime.parseJsonFile("test.json"); // Same as above, but check the result matches our typedef
 		myObj; // Set from static variable: that's pretty cool!
