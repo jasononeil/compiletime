@@ -15,6 +15,14 @@ Usage
 	
 	var file = CompileTime.readFile("README.md"); // will be compiled as an ordinary string in your code
 
+	// Read a file and use String Interpolation
+
+	var name="Jason", age=25;
+	var greeting = CompileTime.interpolateFile("test.txt"); 
+		// Reads the contents of test.txt, and interpolates local values, similar to single quote string interpolation
+		// Same as writing greeting = 'Hello my name is $name and I am ${age-5} years old'
+		// Result will be "Hello my name is Jason and I am 20 years old";
+	
 	// Import a whole package to make sure it's included in compilation.  Does not affect dead-code-elimination.
 	
 	CompileTime.importPackage("server.controllers");

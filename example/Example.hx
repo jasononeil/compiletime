@@ -20,6 +20,8 @@ class Example
 		var date = CompileTime.buildDate();						// Equivalent of writing `new Date(2012,11,25,20,48,15);`
 		var dateAsString = CompileTime.buildDateString();		// A string saying "2012-12-25 20:48:15"
 		var file = CompileTime.readFile("README.md");			// Reads the contents of README.md as a String.
+		var name="Jason", age=25;
+		var greeting = CompileTime.interpolateFile("test.txt"); // Reads the contents of test.txt, and interpolates local values, similar to single quotes
 		var xmlString = CompileTime.readXmlFile("test.xml");	// Reads the contents of text.xml as a String, but checks that it is valid XML
 		// var xmlString = CompileTime.readXmlFile("broken.xml");
 		var jsonString = CompileTime.readJsonFile("test.json"); // Reads the contents of text.json as a String, but checks that it is valid JSON

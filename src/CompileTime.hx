@@ -12,6 +12,7 @@
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
+import haxe.macro.Format;
 import haxe.Json;
 using StringTools;
 using Lambda;
@@ -38,6 +39,11 @@ class CompileTime
     /** Reads a file at compile time, and inserts the contents into your code as a string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
     macro public static function readFile(path:String) {
         return toExpr(loadFileAsString(path));
+    }
+
+    /** Reads a file at compile time, and inserts the contents into your code as an interpolated string, similar to using 'single $quotes'.  */
+    macro public static function interpolateFile(path:String) {
+        return Format.format( toExpr(loadFileAsString(path)) );
     }
 
     /** Same as readFile, but checks that the file is valid Json */
