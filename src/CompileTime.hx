@@ -20,7 +20,7 @@ using Lambda;
 class CompileTime 
 {
     /** Inserts a date object of the date and time that this was compiled */
-    macro public static function buildDate() {
+    macro public static function buildDate():ExprOf<Date> {
         var date = Date.now();
         var year = toExpr(date.getFullYear());
         var month = toExpr(date.getMonth());
@@ -32,22 +32,22 @@ class CompileTime
     }
 
     /** Returns a string of the date and time that this was compiled */
-    macro public static function buildDateString() {
+    macro public static function buildDateString():ExprOf<String> {
         return toExpr(Date.now().toString());
     }
 
     /** Reads a file at compile time, and inserts the contents into your code as a string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
-    macro public static function readFile(path:String) {
+    macro public static function readFile(path:String):ExprOf<String> {
         return toExpr(loadFileAsString(path));
     }
 
     /** Reads a file at compile time, and inserts the contents into your code as an interpolated string, similar to using 'single $quotes'.  */
-    macro public static function interpolateFile(path:String) {
+    macro public static function interpolateFile(path:String):ExprOf<String> {
         return Format.format( toExpr(loadFileAsString(path)) );
     }
 
     /** Same as readFile, but checks that the file is valid Json */
-    macro public static function readJsonFile(path:String) {
+    macro public static function readJsonFile(path:String):ExprOf<String> {
         var content = loadFileAsString(path);
         try Json.parse(content) catch (e:Dynamic) {
             haxe.macro.Context.error("Json failed to validate: " + Std.string(e), Context.currentPos());
@@ -56,7 +56,7 @@ class CompileTime
     }
 
     /** Same as readFile, but checks that the file is valid Json */
-    macro public static function parseJsonFile(path:String) {
+    macro public static function parseJsonFile(path:String):ExprOf<{}> {
         var content = loadFileAsString(path);
         var obj = try Json.parse(content) catch (e:Dynamic) {
             haxe.macro.Context.error("Json failed to validate: " + Std.string(e), Context.currentPos());
@@ -65,7 +65,7 @@ class CompileTime
     }
 
     /** Same as readFile, but checks that the file is valid Xml */
-    macro public static function readXmlFile(path:String) {
+    macro public static function readXmlFile(path:String):ExprOf<String> {
         var content = loadFileAsString(path);
         try Xml.parse(content) catch (e:Dynamic) {
             haxe.macro.Context.error("Xml failed to validate: " + Std.string(e), Context.currentPos());
