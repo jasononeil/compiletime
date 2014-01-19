@@ -50,18 +50,3 @@ CompileTime.getAllClasses("my.package", false);			// Returns a list of only the 
 CompileTime.getAllClasses(MySuperClass);				// Returns a list of all the classes that inherit MySuperClass, no matter what package
 CompileTime.getAllClasses("my.package", MySuperClass);	// Returns a list of all the classes in the "my.package" package that inherit MySuperClass.
 ```
-
-Possible Future Features
-------------------------
-
-String Interpolation from a compile time file.
-
-eg:
-
-```haxe
-var name = "Jason";
-var output = CompileTime.fileInterpolation("mytemplate.txt"); // 'Hi my name is $name';
-trace (output); // 'Hi my name is Jason';
-```
-
-Essentialy does the same as single quote mark (') string interpolation, (previously Std.format), but instead of using a string there it loads something at compile time.
