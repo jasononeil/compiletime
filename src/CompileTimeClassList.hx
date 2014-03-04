@@ -9,8 +9,6 @@
 * 
 ****/
 
-using Lambda;
-
 class CompileTimeClassList 
 {
 	static var lists:Map<String, List<Class<Dynamic>>> = null;
@@ -31,10 +29,11 @@ class CompileTimeClassList
 			{
 				var array:Array<String> = cast item;
 				var listID = array[0];
-				var classes = item[1].split(',').map(function (typeName) {
-					return Type.resolveClass(typeName);
-				});
-				lists.set(listID, classes);
+				var list = new List();
+				for ( typeName in array[1].split(',') ) {
+					list.push( Type.resolveClass(typeName) );
+				}
+				lists.set(listID, list);
 			}
 		}
 	}

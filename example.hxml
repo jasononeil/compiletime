@@ -9,3 +9,10 @@
 -js example/Example.hx.js
 -cp src/
 -cp example/
+
+--next 
+
+-main Example 
+-swf example/Example.hx.swf
+-cp src/
+-cp example/

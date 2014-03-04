@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Added CompileTime.interpolateFile('someFile.txt'), that is the same as using single quote string interpolation.  It's a poor man's templating engine.",
-  "version": "2.2.0",
+  "releasenote": "Fix for flash target.",
+  "version": "2.2.1",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }
