@@ -97,7 +97,8 @@ class CompileTime
 
         static function loadFileAsString(path:String) {
             try {
-                var p = haxe.macro.Context.resolvePath(path);
+                var p = Context.resolvePath(path);
+                Context.registerModuleDependency(Context.getLocalModule(),p);
                 return sys.io.File.getContent(p);
             } 
             catch(e:Dynamic) {
