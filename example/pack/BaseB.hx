@@ -1,7 +1,7 @@
 package pack;
 
 @:keepSub
-class BaseB
+class BaseB implements InterfaceC
 {
 	var b:String;
 

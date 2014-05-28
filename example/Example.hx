@@ -36,39 +36,48 @@ class Example
 		assert(allClasses.count() > 10);
 
 		var packClasses = CompileTime.getAllClasses("pack");			// Get every class in package "pack"
-		assert(packClasses.count() == 10);
+		assertEquals(10, packClasses.count());
 
 		var packClassesOnly = CompileTime.getAllClasses("pack", false);	// Get every class in package "pack", but ignore sub-packages
-		assert(packClassesOnly.count() == 2);
+		assertEquals(2, packClassesOnly.count());
 
 		var packSub1Classes = CompileTime.getAllClasses("pack.sub1");	// Get every class in package "pack.sub1"
-		assert(packSub1Classes.count() == 4);
+		assertEquals(4, packSub1Classes.count());
 
 		var packSub2Classes = CompileTime.getAllClasses("pack.sub2");	// Get every class in package "pack.sub2"
-		assert(packSub2Classes.count() == 4);
+		assertEquals(4, packSub2Classes.count());
 
 		var baseAClasses = CompileTime.getAllClasses(BaseA);			// Get every class that inherits BaseA, no matter which package
-		assert(baseAClasses.count() == 4);
+		assertEquals(4, baseAClasses.count());
 
 		var baseBClasses = CompileTime.getAllClasses(BaseB);			// Get every class that inherits BaseB, no matter which package
-		assert(baseBClasses.count() == 4);
+		assertEquals(4, baseBClasses.count());
 
 		var baseBClasses = CompileTime.getAllClasses(pack.BaseB);		// You can also use a fully qualified class name
-		assert(baseBClasses.count() == 4);
+		assertEquals(4, baseBClasses.count());
 
-		var BaseBPackSub1Classes = CompileTime.getAllClasses("pack.sub1", BaseB);	// Get every class in package "pack.sub1" that inherits BaseB
-		assert(BaseBPackSub1Classes.count() == 2);
+		var baseBPackSub1Classes = CompileTime.getAllClasses("pack.sub1", BaseB);	// Get every class in package "pack.sub1" that inherits BaseB
+		assertEquals(2, baseBPackSub1Classes.count());
 
-		for (c in BaseBPackSub1Classes)
+		for (c in baseBPackSub1Classes)
 		{
 			var o = Type.createInstance(c, []);
-			trace (o.b);  // sub1.1, sub1.2
+			trace(o.b);  // sub1.1, sub1.2
 		}
 
+		var interfaceCClasses = CompileTime.getAllClasses(InterfaceC);	// Get every class that implements interface C.
+		assertEquals(6, interfaceCClasses.count());
+
+		var interfaceCClasses = CompileTime.getAllClasses("pack.sub1", InterfaceC);	// Get every class that implements interface C.
+		assertEquals(3, interfaceCClasses.count());
 	}
 
-	static function assert (condition:Bool)
+	static function assertEquals<T>(expected:T, actual:T, ?pos:haxe.PosInfos) {
+		if (expected != actual) haxe.Log.trace('Failure (Expected $expected, actual $actual)',pos);
+	}
+
+	static function assert (condition:Bool, ?pos:haxe.PosInfos)
 	{
-		if (condition == false) throw "Error...";
+		if (condition == false) haxe.Log.trace('Failure',pos);
 	}
 }

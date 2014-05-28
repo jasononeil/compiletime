@@ -113,12 +113,27 @@ class CompileTime
             );
         }
 
+        static function implementsInterface(cls:ClassType, interfaceToMatch:ClassType):Bool {
+            while (cls!=null) {
+                for ( i in cls.interfaces ) {
+                    if (isSameClass(i.t.get(), interfaceToMatch)) {
+                        return true;
+                    }
+                }
+                if (cls.superClass!=null) {
+                    cls = cls.superClass.t.get();
+                }
+                else cls = null;
+            }
+            return false;
+        }
+
         static function isSubClassOfBaseClass(subClass:ClassType, baseClass:ClassType):Bool {
-            var sClass = subClass;
-            while (sClass.superClass != null)
+            var cls = subClass;
+            while (cls.superClass != null)
             {
-                sClass = sClass.superClass.t.get();
-                if (isSameClass(baseClass, sClass)) { return true; }
+                cls = cls.superClass.t.get();
+                if (isSameClass(baseClass, cls)) { return true; }
             }
             return false;
         }
@@ -169,6 +184,9 @@ class CompileTime
                     case TInst(t, _):
                         var include = true;
 
+                        if (t.get().isInterface)
+                            include = false;
+
                         // Check if it belongs to a certain package or subpackage
                         if (inPackage != null) {
                             if (includeChildPackages) {
@@ -184,8 +202,14 @@ class CompileTime
 
                         // Check if it is a subclass of a certain type
                         if (baseClass != null) {
-                            if (isSubClassOfBaseClass(t.get(), baseClass) == false)
-                                include = false;
+                            if (baseClass.isInterface) {
+                                if (implementsInterface(t.get(), baseClass) == false)
+                                    include = false;
+                            }
+                            else {
+                                if (isSubClassOfBaseClass(t.get(), baseClass) == false)
+                                    include = false;
+                            }
                         }
 
                         if (include) 

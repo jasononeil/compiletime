@@ -1,6 +1,6 @@
 package pack.sub1;
 
-class Sub1TypeANumber1 extends pack.BaseA
+class Sub1TypeANumber1 extends pack.BaseA implements pack.InterfaceC
 {
 	public function new()
 	{
