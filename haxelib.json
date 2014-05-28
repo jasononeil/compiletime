@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Allow getting classes that implement a certain interface.  Also add files loaded via macros to `Context.registerModuleDependency` so they are watched by the compiler cache.",
-  "version": "2.3.0",
+  "releasenote": "When getting classes that match a base class or interface, return a typed list.",
+  "version": "2.4.0",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }

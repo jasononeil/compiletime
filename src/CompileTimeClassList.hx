@@ -13,10 +13,15 @@ class CompileTimeClassList
 {
 	static var lists:Map<String, List<Class<Dynamic>>> = null;
 	
-	public static function get(id:String)
+	public static function get(id:String):List<Class<Dynamic>>
 	{
 		if (lists == null) initialise();
 		return lists.get(id);
+	}
+
+	public static inline function getTyped<T>(id:String, type:Class<T>):List<Class<T>>
+	{
+		return cast get(id);
 	}
 
 	static function initialise()

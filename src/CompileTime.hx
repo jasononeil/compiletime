@@ -81,13 +81,16 @@ class CompileTime
 
     /** Returns an Array of Classes.  By default it will return all classes, but you can also search for classes in a particular package, 
     classes that extend a particular type, and you can choose whether to look for classes recursively or not. */
-    macro public static function getAllClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<Dynamic>>) {
+    macro public static function getAllClasses<T>(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<T>>):ExprOf<Iterable<T>> {
         var p = Context.currentPos();
         var baseClass:ClassType = getClassTypeFromExpr(extendsBaseClass);
         var baseClassName:String = (baseClass == null) ? "" : baseClass.pack.join('.') + '.' + baseClass.name;
         var listIDExpr = toExpr(inPackage + "," + includeChildPackages + "," + baseClassName);
         Context.onGenerate(checkForMatchingClasses.bind(inPackage, includeChildPackages, baseClass, listIDExpr, p));
-        return macro CompileTimeClassList.get($listIDExpr);
+        if (extendsBaseClass!=null)
+            return macro CompileTimeClassList.getTyped($listIDExpr, $extendsBaseClass);
+        else
+            return macro CompileTimeClassList.get($listIDExpr);
     }
 
     #if macro
