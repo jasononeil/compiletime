@@ -45,8 +45,22 @@ var typedJsonObject:Person = CompileTime.parseJsonFile("test.json"); // Same as 
 
 // Get lists of classes that have been compiled
 
-CompileTime.getAllClasses("my.package");				// Returns a list of all the classes in the "my.package" package, including sub-packages
-CompileTime.getAllClasses("my.package", false);			// Returns a list of only the classes in the "my.package" package, so not including sub-packages
-CompileTime.getAllClasses(MySuperClass);				// Returns a list of all the classes that inherit MySuperClass, no matter what package
-CompileTime.getAllClasses("my.package", MySuperClass);	// Returns a list of all the classes in the "my.package" package that inherit MySuperClass.
+// Returns a list of all the classes in the "my.package" package, including sub-packages
+CompileTime.getAllClasses("my.package");
+
+// Returns a list of only the classes in the "my.package" package, so not including sub-packages
+CompileTime.getAllClasses("my.package", false);
+
+// Returns a list of all the classes that inherit MySuperClass, no matter what package
+CompileTime.getAllClasses(MySuperClass);
+
+// Returns a list of all the classes in the "my.package" package that inherit MySuperClass.
+CompileTime.getAllClasses("my.package", MySuperClass);
+
+// Returns a list of all the classes that implement MyInterface, no matter what package.
+CompileTime.getAllClasses(MyInterface);
+
+// Returns a list of all the classes in the "my.package" package that implement MyInterface.
+CompileTime.getAllClasses("my.package", MyInterface);
+
 ```

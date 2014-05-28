@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Fix for flash target.",
-  "version": "2.2.1",
+  "releasenote": "Allow getting classes that implement a certain interface.  Also add files loaded via macros to `Context.registerModuleDependency` so they are watched by the compiler cache.",
+  "version": "2.3.0",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }
