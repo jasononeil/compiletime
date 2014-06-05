@@ -36,7 +36,8 @@ class CompileTimeClassList
 				var listID = array[0];
 				var list = new List();
 				for ( typeName in array[1].split(',') ) {
-					list.push( Type.resolveClass(typeName) );
+					var type = Type.resolveClass(typeName);
+					if ( type!=null ) list.push( type );
 				}
 				lists.set(listID, list);
 			}
