@@ -50,7 +50,7 @@ class CompileTime
     macro public static function readJsonFile(path:String):ExprOf<String> {
         var content = loadFileAsString(path);
         try Json.parse(content) catch (e:Dynamic) {
-            haxe.macro.Context.error("Json failed to validate: " + Std.string(e), Context.currentPos());
+            haxe.macro.Context.error('Json from $path failed to validate: $e', Context.currentPos());
         }
         return toExpr(content);
     }
@@ -59,7 +59,7 @@ class CompileTime
     macro public static function parseJsonFile(path:String):ExprOf<{}> {
         var content = loadFileAsString(path);
         var obj = try Json.parse(content) catch (e:Dynamic) {
-            haxe.macro.Context.error("Json failed to validate: " + Std.string(e), Context.currentPos());
+            haxe.macro.Context.error('Json from $path failed to validate: $e', Context.currentPos());
         }
         return toExpr(obj);
     }
@@ -68,10 +68,24 @@ class CompileTime
     macro public static function readXmlFile(path:String):ExprOf<String> {
         var content = loadFileAsString(path);
         try Xml.parse(content) catch (e:Dynamic) {
-            haxe.macro.Context.error("Xml failed to validate: " + Std.string(e), Context.currentPos());
+            haxe.macro.Context.error('Xml from $path failed to validate: $e', Context.currentPos());
         }
         return toExpr(content);
     }
+
+    #if markdown
+        /** Same as readFile, but checks that the file is valid Xml */
+        macro public static function readMarkdownFile(path:String):ExprOf<String> {
+            var content = loadFileAsString(path);
+            try {
+                content = Markdown.markdownToHtml( content );
+                Xml.parse(content); 
+            } catch (e:Dynamic) {
+                haxe.macro.Context.error('Markdown from $path did not produce valid XML: $e', Context.currentPos());
+            }
+            return toExpr(content);
+        }
+    #end
 
     /** Import a package at compile time.  Is a simple mapping to haxe.macro.Compiler.include(), but means you don't have to wrap your code in conditionals. */
     macro public static function importPackage(path:String, ?recursive:Bool = true, ?ignore : Array<String>, ?classPaths : Array<String>) {

@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Bug fix: When CompileTime.getAllClasses() does not match any classes, return an empty list, not a list with a `null` item.",
-  "version": "2.4.1",
+  "releasenote": "Add `var html:String = CompileTime.readMarkdownFile(test.md);`",
+  "version": "2.5.0",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }

@@ -43,6 +43,11 @@ var jsonString = CompileTime.readJsonFile("test.json"); // Inserts the contents 
 var jsonObject = CompileTime.parseJsonFile("test.json"); 
 var typedJsonObject:Person = CompileTime.parseJsonFile("test.json"); // Same as above, but check the result matches a typedef
 
+// Read a markdown file, convert to HTML and check the result is valid XML.  Will give a compile time error if it doesn't validate.
+
+var htmlString = CompileTime.readMarkdownFile("test.md");	// Will insert it as a HTML String.  
+Xml.parse(htmlString);
+
 // Get lists of classes that have been compiled
 
 // Returns a list of all the classes in the "my.package" package, including sub-packages

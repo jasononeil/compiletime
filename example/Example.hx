@@ -24,6 +24,7 @@ class Example
 		var greeting = CompileTime.interpolateFile("test.txt"); // Reads the contents of test.txt, and interpolates local values, similar to single quotes
 		var xmlString = CompileTime.readXmlFile("test.xml");	// Reads the contents of text.xml as a String, but checks that it is valid XML
 		// var xmlString = CompileTime.readXmlFile("broken.xml");
+		var markdownHTML = CompileTime.readMarkdownFile("test.md");	// Reads the contents of text.xml as a String, but checks that it is valid XML
 		var jsonString = CompileTime.readJsonFile("test.json"); // Reads the contents of text.json as a String, but checks that it is valid JSON
 		// var jsonString = CompileTime.readJsonFile("broken.json");
 		var jsonObject = CompileTime.parseJsonFile("test.json"); // Reads the contents of text.json, parses it, and places the resulting object in the code so no parsing happens at runtime
