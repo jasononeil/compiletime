@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Add `var html:String = CompileTime.readMarkdownFile(test.md);`",
-  "version": "2.5.0",
+  "releasenote": "Fix to type signiature for CompileTime.getAllClasses()`",
+  "version": "2.5.1",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }
