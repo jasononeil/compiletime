@@ -18,8 +18,28 @@ using StringTools;
 using Lambda;
 
 class CompileTime 
-{
-    /** Inserts a date object of the date and time that this was compiled */
+{	
+	/** Returns all the arguments that were passed by the commandline to trigger this build. */
+    macro public static function args():ExprOf<Array<String>> {
+		return toExpr(Sys.args());
+	}
+	
+	/** Get the current working directory at compile-time (usually the one in which the program was started) */
+    macro public static function getCwd():ExprOf<String> {
+		return toExpr(Sys.getCwd());
+	}
+	
+	/** Returns the value of the given environment variable at compile-time, or null if it doesn't exist. */
+    macro public static function getEnv(name:String):ExprOf<String> {
+		return toExpr(Sys.getEnv(name));
+	}
+	
+	/** Returns the name of the system the code was compiled on. */
+    macro public static function systemName():ExprOf<String> {
+		return toExpr(Sys.systemName());
+	}
+	
+	/** Inserts a date object of the date and time that this was compiled */
     macro public static function buildDate():ExprOf<Date> {
         var date = Date.now();
         var year = toExpr(date.getFullYear());
@@ -30,7 +50,7 @@ class CompileTime
         var secs = toExpr(date.getSeconds());
         return macro new Date($year, $month, $day, $hours, $mins, $secs);
     }
-
+	
     /** Returns a string of the date and time that this was compiled */
     macro public static function buildDateString():ExprOf<String> {
         return toExpr(Date.now().toString());
