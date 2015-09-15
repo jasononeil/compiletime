@@ -12,6 +12,11 @@ Usage
 var date = CompileTime.buildDate();						// Equivalent of writing `new Date(2012,11,25,20,48,15);`
 var dateAsString = CompileTime.buildDateString();		// A string saying "2012-12-25 20:48:15"
 
+// Compile git commit sha
+
+var sha = CompileTime.buildGitCommitSha();
+//'104ad4e'
+
 // Read a file
 
 var file = CompileTime.readFile("README.md"); // will be compiled as an ordinary string in your code
