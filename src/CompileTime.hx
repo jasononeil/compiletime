@@ -1,12 +1,12 @@
 /****
 * Copyright (c) 2013 Jason O'Neil
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-* 
+*
 ****/
 
 import haxe.macro.Context;
@@ -14,10 +14,14 @@ import haxe.macro.Expr;
 import haxe.macro.Type;
 import haxe.macro.Format;
 import haxe.Json;
+import yaml.Yaml;
+import yaml.Parser;
+import yaml.Renderer;
+import yaml.util.ObjectMap;
 using StringTools;
 using Lambda;
 
-class CompileTime 
+class CompileTime
 {
     /** Inserts a date object of the date and time that this was compiled */
     macro public static function buildDate():ExprOf<Date> {
@@ -64,6 +68,17 @@ class CompileTime
         return toExpr(obj);
     }
 
+
+    macro public static function parseYamlFile(path:String) {
+      var content = loadFileAsString(path);
+      var data = Yaml.parse(content, Parser.options().useObjects());
+      var s = haxe.Json.stringify(data);
+      var json = haxe.Json.parse(s);
+      return toExpr(json);
+    }
+
+
+
     /** Same as readFile, but checks that the file is valid Xml */
     macro public static function readXmlFile(path:String):ExprOf<String> {
         var content = loadFileAsString(path);
@@ -79,7 +94,7 @@ class CompileTime
             var content = loadFileAsString(path);
             try {
                 content = Markdown.markdownToHtml( content );
-                Xml.parse(content); 
+                Xml.parse(content);
             } catch (e:Dynamic) {
                 haxe.macro.Context.error('Markdown from $path did not produce valid XML: $e', Context.currentPos());
             }
@@ -93,7 +108,7 @@ class CompileTime
         return toExpr(0);
     }
 
-    /** Returns an Array of Classes.  By default it will return all classes, but you can also search for classes in a particular package, 
+    /** Returns an Array of Classes.  By default it will return all classes, but you can also search for classes in a particular package,
     classes that extend a particular type, and you can choose whether to look for classes recursively or not. */
     macro public static function getAllClasses<T>(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<T>>):ExprOf<Iterable<Class<T>>> {
         var p = Context.currentPos();
@@ -117,7 +132,7 @@ class CompileTime
                 var p = Context.resolvePath(path);
                 Context.registerModuleDependency(Context.getLocalModule(),p);
                 return sys.io.File.getContent(p);
-            } 
+            }
             catch(e:Dynamic) {
                 return haxe.macro.Context.error('Failed to load file $path: $e', Context.currentPos());
             }
@@ -126,7 +141,7 @@ class CompileTime
         static function isSameClass(a:ClassType, b:ClassType):Bool {
             return (
                 a.pack.join(".") == b.pack.join(".")
-                && a.name == b.name 
+                && a.name == b.name
             );
         }
 
@@ -197,7 +212,7 @@ class CompileTime
             var classesFound:Array<String> = [];
             for (type in arr) {
                 switch (type) {
-                    // We only care for Classes 
+                    // We only care for Classes
                     case TInst(t, _):
                         var include = true;
 
@@ -207,7 +222,7 @@ class CompileTime
                         // Check if it belongs to a certain package or subpackage
                         if (inPackage != null) {
                             if (includeChildPackages) {
-                                if (t.toString().startsWith(inPackage) == false) 
+                                if (t.toString().startsWith(inPackage) == false)
                                     include = false;
                             }
                             else {
@@ -229,8 +244,8 @@ class CompileTime
                             }
                         }
 
-                        if (include) 
-                            classesFound.push(t.toString()); 
+                        if (include)
+                            classesFound.push(t.toString());
                     default:
                 }
             }
@@ -257,7 +272,7 @@ class CompileTime
             else {
                 classListsMetaArray = [];
             }
-            
+
             // Add the class names to CompileTimeClassList as metadata
             var itemAsArray = macro [$listIDExpr, $classNamesExpr];
             classListsMetaArray.push(itemAsArray);

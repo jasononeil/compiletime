@@ -11,7 +11,7 @@ typedef Person = {
 	?other:Int
 }
 
-class Example 
+class Example
 {
 	static var myObj = CompileTime.parseJsonFile("test.json");
 
@@ -29,6 +29,9 @@ class Example
 		// var jsonString = CompileTime.readJsonFile("broken.json");
 		var jsonObject = CompileTime.parseJsonFile("test.json"); // Reads the contents of text.json, parses it, and places the resulting object in the code so no parsing happens at runtime
 		var typedJsonObject:Person = CompileTime.parseJsonFile("test.json"); // Same as above, but check the result matches our typedef
+
+		var yamlObject = CompileTime.parseYamlFile("test.yaml");  // Reads the contents of test.yaml, parses it, and places the resulting object in the code so no parsing happens at runtime
+
 		myObj; // Set from static variable: that's pretty cool!
 
 		CompileTime.importPackage("pack");						// Imports every class in that package
