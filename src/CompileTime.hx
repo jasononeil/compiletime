@@ -14,10 +14,12 @@ import haxe.macro.Expr;
 import haxe.macro.Type;
 import haxe.macro.Format;
 import haxe.Json;
+#if yaml
 import yaml.Yaml;
 import yaml.Parser;
 import yaml.Renderer;
 import yaml.util.ObjectMap;
+#end
 using StringTools;
 using Lambda;
 
@@ -68,7 +70,7 @@ class CompileTime
         return toExpr(obj);
     }
 
-
+    #if yaml
     macro public static function parseYamlFile(path:String) {
       var content = loadFileAsString(path);
       var data = Yaml.parse(content, Parser.options().useObjects());
@@ -76,7 +78,7 @@ class CompileTime
       var json = haxe.Json.parse(s);
       return toExpr(json);
     }
-
+    #end
 
 
     /** Same as readFile, but checks that the file is valid Xml */
