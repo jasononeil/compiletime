@@ -1,7 +1,7 @@
 Compile Time
 ============
 
-Simple Haxe Macro Helpers that let you do or get things at compile-time. 
+Simple Haxe Macro Helpers that let you do or get things at compile-time.
 
 Usage
 -----
@@ -19,7 +19,7 @@ var file = CompileTime.readFile("README.md"); // will be compiled as an ordinary
 // Read a file and use String Interpolation
 
 var name="Jason", age=25;
-var greeting = CompileTime.interpolateFile("test.txt"); 
+var greeting = CompileTime.interpolateFile("test.txt");
 	// Reads the contents of test.txt, and interpolates local values, similar to single quote string interpolation
 	// Same as writing greeting = 'Hello my name is $name and I am ${age-5} years old'
 	// Result will be "Hello my name is Jason and I am 20 years old";
@@ -40,8 +40,14 @@ var jsonString = CompileTime.readJsonFile("test.json"); // Inserts the contents 
 // Parse the JSON file, so it is inserted as an object declaration into the code.
 // This has the added benefit of giving you compile time typing and autocompletion.
 
-var jsonObject = CompileTime.parseJsonFile("test.json"); 
+var jsonObject = CompileTime.parseJsonFile("test.json");
 var typedJsonObject:Person = CompileTime.parseJsonFile("test.json"); // Same as above, but check the result matches a typedef
+
+// Parse the JSON file, so it is inserted as an object declaration into the code.
+// This has the added benefit of giving you compile time typing and autocompletion.
+
+var yamlObject = CompileTime.parseYamlFile("test.yaml");
+var yamlObject:Person = CompileTime.parseYamlFile("test.yaml"); // Check the type is correct.
 
 // Read a markdown file, convert to HTML and check the result is valid XML.  Will give a compile time error if it doesn't validate.
 

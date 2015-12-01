@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Fix to type signiature for CompileTime.getAllClasses()`",
-  "version": "2.5.1",
+  "releasenote": "Add `CompileTime.parseYamlFile()` if compiled with the `yaml` haxelib",
+  "version": "2.6.0",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }

@@ -1,21 +1,14 @@
 -main Example
+-lib markdown
+-lib yaml
+-cp src/
+-cp example/
+
+--each
 -neko example/Example.hx.n
--lib markdown yaml
--cp src/
--cp example/
 
 --next
-
--main Example
 -js example/Example.hx.js
--lib markdown yaml
--cp src/
--cp example/
 
 --next
-
--main Example
 -swf example/Example.hx.swf
--lib markdown yaml
--cp src/
--cp example/

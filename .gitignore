@@ -6,4 +6,4 @@ bin/
 
 # Editor Files
 *.sublime-*
-
+.haxelib
