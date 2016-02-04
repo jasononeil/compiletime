@@ -113,15 +113,32 @@ class CompileTime
     /** Returns an Array of Classes.  By default it will return all classes, but you can also search for classes in a particular package,
     classes that extend a particular type, and you can choose whether to look for classes recursively or not. */
     macro public static function getAllClasses<T>(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<T>>):ExprOf<Iterable<Class<T>>> {
-        var p = Context.currentPos();
+
+        // Add the onGenerate function to search for matching classes and add them to our metadata.
+		// Make sure we run it once per-compile, not once per-controller-per-compile.
+		// Also ensure that it is re-run for each new compile if using the compiler cache.
+		Context.onMacroContextReused(function () {
+			allClassesSearches = new Map();
+			return true;
+		});
+		if ( Lambda.count(allClassesSearches)==0 ) {
+			Context.onGenerate(checkForMatchingClasses);
+		}
+
+        // Add the search to our static var so we can get results during onGenerate
         var baseClass:ClassType = getClassTypeFromExpr(extendsBaseClass);
         var baseClassName:String = (baseClass == null) ? "" : baseClass.pack.join('.') + '.' + baseClass.name;
-        var listIDExpr = toExpr(inPackage + "," + includeChildPackages + "," + baseClassName);
-        Context.onGenerate(checkForMatchingClasses.bind(inPackage, includeChildPackages, baseClass, listIDExpr, p));
+        var listID = '$inPackage,$includeChildPackages,$baseClassName';
+		allClassesSearches[listID] = {
+            inPackage: inPackage,
+            includeChildPackages: includeChildPackages,
+            baseClass: baseClass
+        };
+
         if (extendsBaseClass!=null)
-            return macro CompileTimeClassList.getTyped($listIDExpr, $extendsBaseClass);
+            return macro CompileTimeClassList.getTyped($v{listID}, $extendsBaseClass);
         else
-            return macro CompileTimeClassList.get($listIDExpr);
+            return macro CompileTimeClassList.get($v{listID});
     }
 
     #if macro
@@ -210,77 +227,90 @@ class CompileTime
             return ct;
         }
 
-        static function checkForMatchingClasses(?inPackage:String, ?includeChildPackages:Bool = true, ?baseClass:ClassType, listIDExpr:Expr, p:Position, arr:Array<haxe.macro.Type>) {
-            var classesFound:Array<String> = [];
-            for (type in arr) {
-                switch (type) {
+        static var allClassesSearches:Map<String,CompileTimeClassSearch> = new Map();
+        static function checkForMatchingClasses(allTypes:Array<haxe.macro.Type>) {
+            // Prepare a map to store our results.
+            var getAllClassesResult:Map<String,Array<String>> = new Map();
+            for (listID in allClassesSearches.keys()) {
+                getAllClassesResult[listID] = [];
+            }
+
+            // Go through all the types and look for matches.
+            for (type in allTypes) {
+                switch type {
                     // We only care for Classes
                     case TInst(t, _):
-                        var include = true;
-
-                        if (t.get().isInterface)
-                            include = false;
-
-                        // Check if it belongs to a certain package or subpackage
-                        if (inPackage != null) {
-                            if (includeChildPackages) {
-                                if (t.toString().startsWith(inPackage) == false)
-                                    include = false;
-                            }
-                            else {
-                                var re = new EReg("^" + inPackage + "\\.([A-Z][a-zA-Z0-9]*)$", "");
-                                if (re.match(t.toString()) == false)
-                                    include = false;
+                        var className = t.toString();
+                        var classType = t.get();
+                        if (t.get().isInterface==false) {
+                            // Check if this class matches any of our searches.
+                            for (listID in allClassesSearches.keys()) {
+                                var search = allClassesSearches[listID];
+                                if (classMatchesSearch(className,classType,search)) {
+                                    getAllClassesResult[listID].push(className);
+                                }
                             }
                         }
-
-                        // Check if it is a subclass of a certain type
-                        if (baseClass != null) {
-                            if (baseClass.isInterface) {
-                                if (implementsInterface(t.get(), baseClass) == false)
-                                    include = false;
-                            }
-                            else {
-                                if (isSubClassOfBaseClass(t.get(), baseClass) == false)
-                                    include = false;
-                            }
-                        }
-
-                        if (include)
-                            classesFound.push(t.toString());
                     default:
                 }
             }
 
-            // Create a list of all the qualified class names
-            var classNames = classesFound.map(function (c) { return c.toString(); });
-            var classNamesExpr = toExpr(classNames.join(","));
-
-            // Get the CompileTimeClassList class
-            var ct:ClassType = null;
+            // Add the results to some metadata so it's available at runtime.
             switch (Context.getType("CompileTimeClassList")) {
                 case TInst(classType, _):
-                    ct = classType.get();
+                    var ct = classType.get();
+                    // Get rid of any existing metadata (if using the compiler cache)
+                    if (ct.meta.has('classLists'))
+                        ct.meta.remove('classLists');
+                    // Add the class names to CompileTimeClassList as metadata
+                    var classListsMetaArray:Array<Expr> = [];
+                    for (listID in getAllClassesResult.keys()) {
+                        var classNames = getAllClassesResult[listID];
+                        var itemAsArray = macro [$v{listID}, $v{classNames.join(",")}];
+                        classListsMetaArray.push(itemAsArray);
+                    }
+                    ct.meta.add('classLists', classListsMetaArray, Context.currentPos());
                 default:
             }
 
-            // If the @classLists metadata already exists, get a copy of it and remove it
-            // (We'll re-add it in a minute)
-            var classListsMetaArray:Array<Expr>;
-            if (ct.meta.has('classLists')) {
-                classListsMetaArray = ct.meta.get().filter(function (i) { return i.name == "classLists"; })[0].params;
-                ct.meta.remove('classLists');
-            }
-            else {
-                classListsMetaArray = [];
-            }
-
-            // Add the class names to CompileTimeClassList as metadata
-            var itemAsArray = macro [$listIDExpr, $classNamesExpr];
-            classListsMetaArray.push(itemAsArray);
-            ct.meta.add('classLists', classListsMetaArray, Context.currentPos());
-
             return;
+        }
+
+        static function classMatchesSearch(className:String, classType:ClassType, search:CompileTimeClassSearch):Bool {
+            // Check if it belongs to a certain package or subpackage
+            if (search.inPackage != null) {
+                if (search.includeChildPackages) {
+                    if (className.startsWith(search.inPackage) == false)
+                        return false;
+                }
+                else {
+                    var re = new EReg("^" + search.inPackage + "\\.([A-Z][a-zA-Z0-9]*)$", "");
+                    if (re.match(className) == false)
+                        return false;
+                }
+            }
+
+            // Check if it is a subclass of a certain type
+            if (search.baseClass != null) {
+                if (search.baseClass.isInterface) {
+                    if (implementsInterface(classType, search.baseClass) == false)
+                        return false;
+                }
+                else {
+                    if (isSubClassOfBaseClass(classType, search.baseClass) == false)
+                        return false;
+                }
+            }
+
+            return true;
         }
     #end
 }
+
+#if macro
+    typedef CompileTimeClassSearch = {
+        inPackage:String,
+        includeChildPackages:Bool,
+        baseClass:ClassType
+    }
+#end
