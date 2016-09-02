@@ -217,7 +217,7 @@ class CompileTime
             }
             fullClassName = parts.join(".");
             if (fullClassName != "") {
-                switch (Context.getType(fullClassName)) {
+                switch (Context.follow(Context.getType(fullClassName))) {
                     case TInst(classType, _):
                         ct = classType.get();
                     default:
