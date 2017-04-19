@@ -5,8 +5,8 @@
   "tags": ["cross","macro","helpers"],
   "description": "Simple Haxe Macro Helpers that let you do or get things at compile-time. ",
   "contributors": ["jason"],
-  "releasenote": "Add `CompileTime.parseYamlFile()` if compiled with the `yaml` haxelib",
-  "version": "2.6.0",
+  "releasenote": "Fix package matching (See issue #8). Allow typedef of TInst in getAllClasses(). Added git sha embedding. Re-engineer CompileTime.getAllClasses() to compile faster. Thanks to @kevinresol, @dionjwa and @chipshort for pull requests and bug reports.",
+  "version": "2.7.0",
   "url": "https://github.com/jasononeil/compiletime",
   "dependencies": {
   }
