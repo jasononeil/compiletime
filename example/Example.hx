@@ -51,6 +51,9 @@ class Example
 		var packSub2Classes = CompileTime.getAllClasses("pack.sub2");	// Get every class in package "pack.sub2"
 		assertEquals(4, packSub2Classes.count());
 
+		var packSubClasses = CompileTime.getAllClasses("pack.sub");	// Get every class in package "pack.sub" (not "pack.sub1" or "pack.sub2") - verify exact package name matching.
+		assertEquals(0, packSubClasses.count());
+
 		var baseAClasses = CompileTime.getAllClasses(BaseA);			// Get every class that inherits BaseA, no matter which package
 		assertEquals(4, baseAClasses.count());
 

@@ -280,7 +280,7 @@ class CompileTime
             // Check if it belongs to a certain package or subpackage
             if (search.inPackage != null) {
                 if (search.includeChildPackages) {
-                    if (className.startsWith(search.inPackage) == false)
+                    if (className.startsWith(search.inPackage + ".") == false)
                         return false;
                 }
                 else {
