@@ -1,6 +1,7 @@
 # Compiled Files
 *.js
 *.n
+*.swf
 *.zip
 bin/
 
