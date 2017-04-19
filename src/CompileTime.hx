@@ -42,6 +42,13 @@ class CompileTime
         return toExpr(Date.now().toString());
     }
 
+    /** Returns a string of the current git sha1 */
+    macro public static function buildGitCommitSha():ExprOf<String> {
+        var proc = new sys.io.Process('git', ['log', "--pretty=format:'%h'", '-n', '1']);
+        var sha1 = proc.stdout.readLine();
+        return toExpr(sha1);
+    }
+
     /** Reads a file at compile time, and inserts the contents into your code as a string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
     macro public static function readFile(path:String):ExprOf<String> {
         return toExpr(loadFileAsString(path));
@@ -217,7 +224,7 @@ class CompileTime
             }
             fullClassName = parts.join(".");
             if (fullClassName != "") {
-                switch (Context.getType(fullClassName)) {
+                switch (Context.follow(Context.getType(fullClassName))) {
                     case TInst(classType, _):
                         ct = classType.get();
                     default:
