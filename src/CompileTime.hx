@@ -122,21 +122,23 @@ class CompileTime
     macro public static function getAllClasses<T>(?inPackage:String, ?includeChildPackages:Bool = true, ?extendsBaseClass:ExprOf<Class<T>>):ExprOf<Iterable<Class<T>>> {
 
         // Add the onGenerate function to search for matching classes and add them to our metadata.
-		// Make sure we run it once per-compile, not once per-controller-per-compile.
-		// Also ensure that it is re-run for each new compile if using the compiler cache.
-		Context.onMacroContextReused(function () {
-			allClassesSearches = new Map();
-			return true;
-		});
-		if ( Lambda.count(allClassesSearches)==0 ) {
-			Context.onGenerate(checkForMatchingClasses);
-		}
+        // Make sure we run it once per-compile, not once per-controller-per-compile.
+        // Also ensure that it is re-run for each new compile if using the compiler cache.
+        #if (haxe_ver < 4.0)
+        Context.onMacroContextReused(function () {
+            allClassesSearches = new Map();
+            return true;
+        });
+        #end
+        if ( Lambda.count(allClassesSearches)==0 ) {
+            Context.onGenerate(checkForMatchingClasses);
+        }
 
         // Add the search to our static var so we can get results during onGenerate
         var baseClass:ClassType = getClassTypeFromExpr(extendsBaseClass);
         var baseClassName:String = (baseClass == null) ? "" : baseClass.pack.join('.') + '.' + baseClass.name;
         var listID = '$inPackage,$includeChildPackages,$baseClassName';
-		allClassesSearches[listID] = {
+        allClassesSearches[listID] = {
             inPackage: inPackage,
             includeChildPackages: includeChildPackages,
             baseClass: baseClass
