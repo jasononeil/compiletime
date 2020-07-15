@@ -49,6 +49,31 @@ class CompileTime
         return toExpr(sha1);
     }
 
+    /** Returns a string of the current git tag.
+        If there is no tag on the current commit, a combination of `TAG-SHA1` from the latest tag is returned instead.
+        If there are no tags on the repository, `null` is returned instead. */
+    macro public static function buildGitTag():ExprOf<String> {
+        var proc = new sys.io.Process('git', ['describe', '--tags']);
+        var tag = null;
+        try {
+            tag = proc.stdout.readLine();
+        }
+        catch (e: Dynamic) { }
+        return toExpr(tag);
+    }
+
+    /** Returns a string of the current git tag.
+        If there is no tag on the current commit, `null` is returned instead. */
+    macro public static function buildGitTagExact():ExprOf<String> {
+        var proc = new sys.io.Process('git', ['describe', '--tags', '--exact-match' ]);
+        var tag = null;
+        try {
+            tag = proc.stdout.readLine();
+        }
+        catch (e: Dynamic) { }
+        return toExpr(tag);
+    }
+
     /** Reads a file at compile time, and inserts the contents into your code as a string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
     macro public static function readFile(path:String):ExprOf<String> {
         return toExpr(loadFileAsString(path));
