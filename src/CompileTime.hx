@@ -49,10 +49,11 @@ class CompileTime
         return toExpr(sha1);
     }
 
-    /** Returns a string of the current git tag.
+    /** Returns a string of the current git tag description.
+        If there is a tag on the current commit, the tag is returned.
         If there is no tag on the current commit, a combination of `TAG-SHA1` from the latest tag is returned instead.
         If there are no tags on the repository, `null` is returned instead. */
-    macro public static function buildGitTag():ExprOf<String> {
+    macro public static function buildGitTagDescription():ExprOf<String> {
         var proc = new sys.io.Process('git', ['describe', '--tags']);
         var tag = null;
         try {
@@ -64,7 +65,7 @@ class CompileTime
 
     /** Returns a string of the current git tag.
         If there is no tag on the current commit, `null` is returned instead. */
-    macro public static function buildGitTagExact():ExprOf<String> {
+    macro public static function buildGitTag():ExprOf<String> {
         var proc = new sys.io.Process('git', ['describe', '--tags', '--exact-match' ]);
         var tag = null;
         try {
