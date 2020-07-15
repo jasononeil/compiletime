@@ -49,6 +49,13 @@ class CompileTime
         return toExpr(sha1);
     }
 
+    /** Returns a string of the current git full sha1 */
+    macro public static function buildGitCommitShaLong():ExprOf<String> {
+        var proc = new sys.io.Process('git', ['log', "--pretty=format:'%H'", '-n', '1']);
+        var sha1 = proc.stdout.readLine();
+        return toExpr(sha1);
+    }
+
     /** Returns a string of the current git tag description.
         If there is a tag on the current commit, the tag is returned.
         If there is no tag on the current commit, a combination of `TAG-SHA1` from the latest tag is returned instead.
