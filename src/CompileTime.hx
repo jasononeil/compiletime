@@ -54,6 +54,11 @@ class CompileTime
         return toExpr(loadFileAsString(path));
     }
 
+    /** Reads a file's bytes at compile time, and inserts the contents into your code as a Base64 encoded string.  The file path is resolved using `Context.resolvePath`, so it will search all your class paths */
+    macro public static function readFileAsBase64(path:String):ExprOf<String> {
+        return toExpr(loadFileAsBase64(path));
+    }
+
     /** Reads a file at compile time, and inserts the contents into your code as an interpolated string, similar to using 'single $quotes'.  */
     macro public static function interpolateFile(path:String):ExprOf<String> {
         return Format.format( toExpr(loadFileAsString(path)) );
@@ -160,6 +165,18 @@ class CompileTime
                 var p = Context.resolvePath(path);
                 Context.registerModuleDependency(Context.getLocalModule(),p);
                 return sys.io.File.getContent(p);
+            }
+            catch(e:Dynamic) {
+                return haxe.macro.Context.error('Failed to load file $path: $e', Context.currentPos());
+            }
+        }
+
+        static function loadFileAsBase64(path:String) {
+            try {
+                var p = Context.resolvePath(path);
+                Context.registerModuleDependency(Context.getLocalModule(),p);
+                var file = sys.io.File.getBytes(p);
+                return haxe.crypto.Base64.encode(file);
             }
             catch(e:Dynamic) {
                 return haxe.macro.Context.error('Failed to load file $path: $e', Context.currentPos());
